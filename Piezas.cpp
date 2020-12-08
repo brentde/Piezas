@@ -25,12 +25,18 @@
 **/
 Piezas::Piezas()
 {
-
     // Constructor sets an empty board (default 3 rows, 4 columns) and 
+    
+    board.resize(3);
 
-    for(int col = 0; col < 4; col++){
-        for(int row = 3; row > 0; row--){
-            board[col][row] = Blank;
+    for(int row = 0; row < 3; row++){
+        board[row].resize(4);
+    };
+
+
+    for(int row = 0; row < 3; row++){
+        for(int col = 3; col >= 0; col--){
+            board[row][col] = Blank;
         }
     }
 
@@ -49,9 +55,9 @@ Piezas::Piezas()
 **/
 void Piezas::reset()
 {
-    for(int col = 0; col < 4; col++){
-        for(int row = 3; row > 0; row--){
-            board[col][row] = Blank;
+    for(int row = 0; row < 3; row++){
+        for(int col = 3; col >= 0; col--){
+            board[row][col] = Blank;
         }
     }
 }
@@ -80,13 +86,13 @@ Piece Piezas::dropPiece(int column)
         turn = X;
     }
 
-    // If column is full placePiece returns Piece Blank value 
-    if(board[column][2] != Blank)
-        return Blank;
-
-    // Out of bounds coordinates return the Piece Invalid value
+      // Out of bounds coordinates return the Piece Invalid value
     if(column >= 4 || column < 0)
         return Invalid;
+
+    // If column is full placePiece returns Piece Blank value 
+    if(board[2][column] != Blank)
+        return Blank;
 
     int row = 0;
 
@@ -94,8 +100,8 @@ Piece Piezas::dropPiece(int column)
 
         // If current board location is Blank, drop piece
         // This goes from the bottom up
-        if(board[column][row] == Blank){
-            board[column][row] = current_piece;
+        if(board[row][column] == Blank){
+            board[row][column] = current_piece;
             break;
         }
 
@@ -120,7 +126,7 @@ Piece Piezas::dropPiece(int column)
 Piece Piezas::pieceAt(int row, int column)
 {
     // Blank if there are no pieces there
-    if(board[column][row] == Blank)
+    if(board[row][column] == Blank)
         return Blank;
 
     // Invalid if the coordinates are out of bounds
@@ -128,7 +134,7 @@ Piece Piezas::pieceAt(int row, int column)
         return Invalid;
 
     //Returns what piece is at the provided coordinates
-    return board[column][row];
+    return board[row][column];
 }
 
 /**
@@ -145,17 +151,17 @@ Piece Piezas::gameState()
 {
     int X_max = 0;
     int O_max = 0;
-    // Return invalid if the game is not over
-
+    
     for(int col = 0; col < 4; col++){
         for(int row = 0; row < 3; row++){
             int row_inc = row;
             int current_count = 0;
             Piece last_piece = Blank;
+
             // Check vertical
 
             while(row_inc < 3){
-                if(board[col][row_inc] == Blank){
+                if(board[row_inc][col] == Blank){
                     return Invalid;
                 };
 
@@ -165,15 +171,15 @@ Piece Piezas::gameState()
                 // If last_piece is not equal to current board location
                 // change last_piece, reset counter, check if max
                 
-                if(last_piece == Blank || last_piece != board[col][row_inc]){
-                    last_piece = board[col][row_inc];
+                if(last_piece == Blank || last_piece != board[row_inc][col]){
+                    last_piece = board[row_inc][col];
                     current_count = 1; // reset every time it changes
 
                     if(current_count > X_max && last_piece == X){
                         X_max = current_count;
                     } else if(current_count > O_max){
                         O_max = current_count;
-                    }
+                    };
                 } else {
 
                 // Else current board location matches last piece
@@ -187,10 +193,10 @@ Piece Piezas::gameState()
                     } else if(current_count > O_max){
                         O_max = current_count;
                     }
-                }
+                };
 
                 row_inc++;
-            }
+            };
           
             int col_inc = col;
             last_piece = Blank;
@@ -199,19 +205,19 @@ Piece Piezas::gameState()
             // Check horizontal
 
             while(col_inc < 4){
-                if(board[col_inc][row] == Blank){
+                if(board[row][col_inc] == Blank){
                     return Invalid;
                 };
                 
-                if(last_piece == Blank || last_piece != board[col_inc][row]){
-                    last_piece = board[col_inc][row];
+                if(last_piece == Blank || last_piece != board[row][col_inc]){
+                    last_piece = board[row][col_inc];
                     current_count = 1; // reset every time it changes
 
                     if(current_count > X_max && last_piece == X){
                         X_max = current_count;
                     } else if(current_count > O_max){
                         O_max = current_count;
-                    }
+                    };
                 } else {
 
                     current_count++;
@@ -220,14 +226,12 @@ Piece Piezas::gameState()
                         X_max = current_count;
                     } else if(current_count > O_max){
                         O_max = current_count;
-                    }
-                }
+                    };
+                };
 
                 col_inc++;
             }
-         
-
-
+        
         };
     };
 
