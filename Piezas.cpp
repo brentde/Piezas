@@ -53,6 +53,7 @@ Piezas::Piezas()
  * Resets each board location to the Blank Piece value, with a board of the
  * same size as previously specified
 **/
+
 void Piezas::reset()
 {
     for(int row = 0; row < 3; row++){

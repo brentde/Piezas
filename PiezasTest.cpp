@@ -18,6 +18,50 @@ class PiezasTest : public ::testing::Test
 // Tests for dropPiece and pieceAt
 // *********************************
 
+TEST(PiezasTest, emptyBoard0)
+{
+	Piezas board;
+
+	ASSERT_EQ(board.pieceAt(0,0), Blank);
+}
+
+TEST(PiezasTest, emptyBoard1)
+{
+	Piezas board;
+
+	ASSERT_EQ(board.pieceAt(0,1), Blank);
+}
+
+TEST(PiezasTest, emptyBoard2)
+{
+	Piezas board;
+
+	ASSERT_EQ(board.pieceAt(0,2), Blank);
+}
+
+TEST(PiezasTest, emptyBoard3)
+{
+	Piezas board;
+
+	ASSERT_EQ(board.pieceAt(0,3), Blank);
+}
+
+TEST(PiezasTest, dropPieceRetX)
+{
+	Piezas board;
+
+	ASSERT_EQ(board.dropPiece(0), X);
+}
+
+TEST(PiezasTest, dropPieceRetO)
+{
+	Piezas board;
+	board.dropPiece(0);
+
+	ASSERT_EQ(board.dropPiece(0), O);
+}
+
+
 TEST(PiezasTest, dropPiecePos0_0)
 {
 	Piezas board;
@@ -177,4 +221,222 @@ TEST(PiezasTest, dropPieceGreaterThan3)
 {
 	Piezas board;
 	ASSERT_EQ(board.dropPiece(4), Invalid);
+}
+
+// *********************************
+// Tests for gameState
+// *********************************
+
+// O O O O
+// O O X X
+// X X X X
+
+TEST(PiezasTest, gameStateTieHoriz_1)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(0); // O
+	board.dropPiece(1); // X
+	board.dropPiece(0); // O
+	board.dropPiece(2); // X
+	board.dropPiece(1); // O
+	board.dropPiece(3); // X
+	board.dropPiece(1); // O
+	board.dropPiece(2); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(3); // O
+
+	ASSERT_EQ(board.gameState(), Blank);
+}
+
+// X O X O 
+// O O O O 
+// X X X X
+
+TEST(PiezasTest, gameStateTieHoriz_2)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(0); // O
+	board.dropPiece(1); // X
+	board.dropPiece(1); // O
+	board.dropPiece(2); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(3); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(2); // X
+	board.dropPiece(3); // O
+
+	ASSERT_EQ(board.gameState(), Blank);
+}
+
+// X O O O
+// X O O X
+// X O X X
+
+TEST(PiezasTest, gameStateTieVertical_1)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+
+	board.dropPiece(2); // X
+	board.dropPiece(2); // O
+
+	board.dropPiece(3); // X
+	board.dropPiece(2); // O
+
+	board.dropPiece(3); // X
+	board.dropPiece(3); // O
+
+	ASSERT_EQ(board.gameState(), Blank);
+}
+
+// O X O X
+// X O O X
+// O X O X
+
+TEST(PiezasTest, gameStateTieVertical_2)
+{
+	Piezas board;
+	board.dropPiece(3); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(2); // O
+
+	board.dropPiece(1); // X
+	board.dropPiece(1); // O
+	board.dropPiece(1); // X
+	
+	board.dropPiece(0); // O
+	board.dropPiece(0); // X
+	board.dropPiece(0); // O
+
+	ASSERT_EQ(board.gameState(), Blank);
+}
+
+// O X O O
+// O O O X
+// X X X X
+
+TEST(PiezasTest, gameStateXWinHoriz)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(0); // O
+	board.dropPiece(1); // X
+	board.dropPiece(1); // O
+	board.dropPiece(1); // X
+	board.dropPiece(0); // O
+	board.dropPiece(2); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(3); // O
+
+	ASSERT_EQ(board.gameState(), X);
+}
+
+// X X O O
+// X O O X
+// X O X O
+
+TEST(PiezasTest, gameStateXWinVertical)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(3); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(2); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(2); // O
+	board.dropPiece(1); // X
+	board.dropPiece(3); // O
+
+	ASSERT_EQ(board.gameState(), X);
+}
+
+// X O X O 
+// O X X O
+// X X O O
+
+TEST(PiezasTest, gameStateOWinVertical)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(3); // O
+	board.dropPiece(1); // X
+	board.dropPiece(2); // O
+	board.dropPiece(1); // X
+	board.dropPiece(3); // O
+	board.dropPiece(2); // X
+	board.dropPiece(3); // O
+	board.dropPiece(2); // X
+	board.dropPiece(0); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+
+	ASSERT_EQ(board.gameState(), O);
+}
+
+// X X X O
+// O O O O 
+// X X X O
+
+TEST(PiezasTest, gameStateOWinHoriz)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(0); // O
+	board.dropPiece(1); // X
+	board.dropPiece(1); // O
+	board.dropPiece(2); // X
+	board.dropPiece(2); // O
+	board.dropPiece(0); // X
+	board.dropPiece(3); // O
+	board.dropPiece(1); // X
+	board.dropPiece(3); // O
+	board.dropPiece(2); // X
+	board.dropPiece(3); // O
+
+	ASSERT_EQ(board.gameState(), O);
+}
+
+// ****************
+// Tests Reset
+// ****************
+
+TEST(PiezasTest, resetTest)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(3); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(2); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(2); // O
+	board.dropPiece(1); // X
+	board.dropPiece(3); // O
+
+	ASSERT_EQ(board.gameState(), X);
+	board.reset();
+	ASSERT_EQ(board.gameState(), Invalid);
 }
