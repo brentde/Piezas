@@ -440,3 +440,44 @@ TEST(PiezasTest, resetTest)
 	board.reset();
 	ASSERT_EQ(board.gameState(), Invalid);
 }
+
+TEST(PiezasTest, resetWholeBoardBlank)
+{
+	Piezas board;
+	board.dropPiece(0); // X
+	board.dropPiece(3); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(0); // X
+	board.dropPiece(1); // O
+	board.dropPiece(2); // X
+	board.dropPiece(2); // O
+	board.dropPiece(3); // X
+	board.dropPiece(2); // O
+	board.dropPiece(1); // X
+	board.dropPiece(3); // O
+
+	ASSERT_EQ(board.gameState(), X);
+	board.reset();
+	
+	for(int row = 0; row < 3; row++){
+		for(int col = 0; col < 4; col++){
+			ASSERT_EQ(board.pieceAt(row, col), Blank);
+		}
+	}
+}
+
+// **********************
+// Tesrs Constructor
+// **********************
+
+TEST(PiezasTest, intializeGameBoardBlank)
+{
+	Piezas board;
+
+	for(int row = 0; row < 3; row++){
+		for(int col = 0; col < 4; col++){
+			ASSERT_EQ(board.pieceAt(row, col), Blank);
+		}
+	}
+}
